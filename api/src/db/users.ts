@@ -8,13 +8,8 @@ export const users = pgTable('users', {
   username: text('username').notNull(),
   email: text('email').notNull(),
   password: text('password').notNull(),
-  salt: text('salt'),
+  salt: text('salt').notNull(),
   sessiontoken: text('sessiontoken'),
-});
-export const sessions = pgTable('sessions', {
-  id: serial('id').primaryKey(),
-  sessiontoken: text('sessiontoken').notNull(),
-  user_id: serial('user_id').notNull(),
 });
 
 export type User = InferSelectModel<typeof users>;
@@ -23,7 +18,6 @@ export type NewUser = InferInsertModel<typeof users>;
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
-console.log(process.env.DATABASE_URL);
 
 const db = drizzle(pool);
 
