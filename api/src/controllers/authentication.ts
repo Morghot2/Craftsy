@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
-import { getUserByEmail, createUser } from '@/db/users';
+import { getUserByEmail, createUser, updateUserById } from '@/db/users';
 import { random, authentication } from '@/helpers';
+import { SESSION_TOKEN, DOMAIN } from '@/constants';
 
 export const register = async (req: Request, res: Response) => {
   try {
@@ -37,7 +38,9 @@ export const login = async (req: Request, res: Response) => {
       return res.sendStatus(403);
     }
     user.sessiontoken = authentication(random(), user.email);
-    return res.sendStatus(200);
+    const updatedUser = await updateUserById(user.id, user);
+    res.cookie(SESSION_TOKEN, user.sessiontoken, { domain: DOMAIN, path: '/', expires: new Date(Date.now() + 900000) });
+    return res.sendStatus(200).json(updatedUser);
   } catch (error) {
     console.error(error);
     res.sendStatus(400);
