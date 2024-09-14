@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { SESSION_TOKEN } from '../constants';
-import { getUserBySessionToken } from '../db/users';
+import { SESSION_TOKEN } from '@/constants';
+import { getUserBySessionToken } from '@/db/users';
 
 export const isAuthenticated = async (req: Request, res: Response, next: NextFunction) => {
   try {

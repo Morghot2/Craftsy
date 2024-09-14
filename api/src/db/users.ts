@@ -2,6 +2,9 @@ import { drizzle } from 'drizzle-orm/node-postgres';
 import { InferSelectModel, InferInsertModel, eq } from 'drizzle-orm';
 import { pgTable, serial, text } from 'drizzle-orm/pg-core';
 import { Pool } from 'pg';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export const users = pgTable('users', {
   id: serial('id').primaryKey(),
