@@ -39,6 +39,9 @@ h1 {
     background-color: #f9f9f9;
   }
 } */
+body, html { 
+  font-family: 'Vazir', sans-serif !important;
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

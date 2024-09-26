@@ -1,9 +1,5 @@
-import { Button } from '@/components/ui/button';
+import { Navbar } from './components/Navbar/Navbar';
 const App = () => {
-  return (
-    <div className="bg-red-500">
-      <Button>Click me</Button>
-    </div>
-  );
+  return <div>lol</div>;
 };
 export default App;
