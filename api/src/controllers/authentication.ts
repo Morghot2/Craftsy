@@ -5,10 +5,14 @@ import { SESSION_TOKEN, DOMAIN } from '@/constants';
 
 export const register = async (req: Request, res: Response) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, confirmPassword } = req.body;
     if (!username || !email || !password) {
       return res.sendStatus(400);
     }
+    if (password !== confirmPassword) {
+      return res.sendStatus(400);
+    }
+    console.log(username, email, password, confirmPassword);
     const result = await getUserByEmail(email);
     if (!result || result.length > 0) {
       return res.sendStatus(400);
