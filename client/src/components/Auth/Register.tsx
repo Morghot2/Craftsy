@@ -1,5 +1,6 @@
 import * as z from 'zod';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AuthWrapper } from './Shared/AuthWrapper';
 import { registerSchema } from '@/shared/schemas/auth';
@@ -8,7 +9,8 @@ import { Form, FormControl, FormField, FormItem, FormMessage, FormLabel, Button,
 import { useRegisterUser } from '@/shared/queries/useAuth';
 
 export const Register = () => {
-  const { mutate } = useRegisterUser();
+  const { mutate, isSuccess } = useRegisterUser();
+  const navigate = useNavigate();
   const form = useForm({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -21,6 +23,9 @@ export const Register = () => {
   const onSubmit = async (data: z.infer<typeof registerSchema>) => {
     mutate(data);
   };
+  if (isSuccess) {
+    navigate('/');
+  }
 
   return (
     <AuthWrapper label="Create an account" title="Register" backButtonHref="/login" backButtonLabel="Already have an account? Log in!">
@@ -80,7 +85,9 @@ export const Register = () => {
               )}
             />
           </div>
-          <Button type="submit" className="w-full" disabled={false}></Button>
+          <Button type="submit" className="w-full" disabled={false}>
+            Register
+          </Button>
         </form>
       </Form>
     </AuthWrapper>

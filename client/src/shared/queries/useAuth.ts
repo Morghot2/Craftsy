@@ -1,5 +1,5 @@
-import { useMutation, UseMutationOptions } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
+import { useMutation } from '@tanstack/react-query';
+
 import { post } from '../../services/apiClient';
 
 interface NewUser {
@@ -9,20 +9,36 @@ interface NewUser {
   confirmPassword: string;
 }
 
-interface UserResponse {
-  id: string;
-  username: string;
+interface LoginUser {
   email: string;
+  password: string;
 }
 
 const registerUser = async (data: NewUser) => {
-  return post('/auth/register', data); // Adjust endpoint as needed
+  return post('/auth/register', data);
 };
 
-// Custom hook for user registration
+const loginUser = async (data: LoginUser) => {
+  return post('/auth/login', data);
+};
+
 export const useRegisterUser = () => {
   return useMutation({
-    mutationFn: registerUser, // The function to call for the mutation
-    mutationKey: ['registerUser'], // Unique key for the mutation
+    mutationFn: registerUser,
+    mutationKey: ['registerUser'],
+  });
+};
+
+export const useLoginUser = () => {
+  return useMutation({
+    mutationFn: loginUser,
+    mutationKey: ['loginUser'],
+  });
+};
+
+export const useLogoutUser = () => {
+  return useMutation({
+    mutationFn: () => post('/auth/logout'),
+    mutationKey: ['logoutUser'],
   });
 };
