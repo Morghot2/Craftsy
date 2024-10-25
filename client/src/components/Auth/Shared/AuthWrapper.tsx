@@ -12,13 +12,13 @@ interface AuthWrapperProps {
 }
 export const AuthWrapper = ({ label, title, backButtonHref, backButtonLabel, children }: AuthWrapperProps) => {
   return (
-    <div className="h-screen flex items-center justify-center">
-      <Card className="xl:w-1/4 md:w-1/2 shadow-md">
+    <div className="h-screen flex items-center justify-center bg-main ">
+      <Card className="xl:w-1/4 md:w-1/2 shadow-md text-side">
         <CardHeader>
           <AuthHeader label={label} title={title}></AuthHeader>
         </CardHeader>
         <CardContent>{children}</CardContent>
-        <CardFooter>
+        <CardFooter className="text-side">
           <BackButton href={backButtonHref} label={backButtonLabel}></BackButton>
         </CardFooter>
       </Card>

@@ -7,13 +7,19 @@ export default {
   ],
   theme: {
   	extend: {
+		backgroundImage: {
+			'mainimg': "url('./src/assets/craftsy.png')",
+		  },
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		colors: {
-  			background: 'hsl(var(--background))',
+			main: '#c0edd2',
+			side: '#224f34',
+			third: '#6bc785'
+,  			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
   				DEFAULT: 'hsl(var(--card))',
