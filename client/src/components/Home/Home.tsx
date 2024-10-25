@@ -1,3 +1,8 @@
+import { MainCard } from './MainCard/MainCard';
 export const Home = () => {
-  return <div>HomePage</div>;
+  return (
+    <section className="w-full h-screen bg-main py-[2rem]">
+      <MainCard />
+    </section>
+  );
 };

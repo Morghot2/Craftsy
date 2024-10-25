@@ -59,7 +59,7 @@ export const Login = () => {
               )}
             />
           </div>
-          <Button type="submit" className="w-full" disabled={false}>
+          <Button type="submit" className="w-full bg-side" disabled={false}>
             Login
           </Button>
         </form>
