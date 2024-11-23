@@ -22,7 +22,7 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
-const db = drizzle(pool);
+export const db = drizzle(pool);
 
 export const getUsers = async () => await db.select({ id: users.id, username: users.username, email: users.email }).from(users);
 export const getUserByEmail = async (email: string) => await db.select().from(users).where(eq(users.email, email));

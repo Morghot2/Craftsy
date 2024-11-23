@@ -12,7 +12,6 @@ export const register = async (req: Request, res: Response) => {
     if (password !== confirmPassword) {
       return res.sendStatus(400);
     }
-    console.log(username, email, password, confirmPassword);
     const result = await getUserByEmail(email);
     if (!result || result.length > 0) {
       return res.sendStatus(400);
@@ -48,5 +47,15 @@ export const login = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.sendStatus(400);
+  }
+};
+
+export const logout = (req: Request, res: Response) => {
+  try {
+    res.clearCookie(SESSION_TOKEN, { domain: DOMAIN, path: '/' });
+    return res.sendStatus(200);
+  } catch (error) {
+    console.error(error);
+    return res.sendStatus(400);
   }
 };
