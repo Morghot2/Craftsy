@@ -16,8 +16,6 @@ export const MainCard = () => {
           </button>
         </div>
       </div>
-
-      {/* Hidden image on smaller screens */}
       <div className="hidden xl:inline-block pt-8">
         <img src={main} alt="Fashion image" />
       </div>

@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
-
+import { useDispatch } from 'react-redux';
+import { loginUser, logoutUser } from '@/app/slices/userSlice';
 import { post } from '../../services/apiClient';
 
 interface NewUser {
@@ -18,10 +19,6 @@ const registerUser = async (data: NewUser) => {
   return post('/auth/register', data);
 };
 
-const loginUser = async (data: LoginUser) => {
-  return post('/auth/login', data);
-};
-
 export const useRegisterUser = () => {
   return useMutation({
     mutationFn: registerUser,
@@ -29,16 +26,30 @@ export const useRegisterUser = () => {
   });
 };
 
+const loginUserApi = async (data: LoginUser) => post('/auth/login', data);
+
 export const useLoginUser = () => {
+  const dispatch = useDispatch();
+
   return useMutation({
-    mutationFn: loginUser,
+    mutationFn: loginUserApi,
     mutationKey: ['loginUser'],
+    onSuccess: (user) => {
+      dispatch(loginUser({ id: user.id, username: user.username, email: user.email }));
+    },
   });
 };
 
+const logoutUserApi = async () => post('/auth/logout');
+
 export const useLogoutUser = () => {
+  const dispatch = useDispatch();
+
   return useMutation({
-    mutationFn: () => post('/auth/logout'),
+    mutationFn: logoutUserApi,
     mutationKey: ['logoutUser'],
+    onSuccess: () => {
+      dispatch(logoutUser());
+    },
   });
 };

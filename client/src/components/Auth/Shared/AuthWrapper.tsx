@@ -18,7 +18,7 @@ export const AuthWrapper = ({ label, title, backButtonHref, backButtonLabel, chi
           <AuthHeader label={label} title={title}></AuthHeader>
         </CardHeader>
         <CardContent>{children}</CardContent>
-        <CardFooter className="text-side">
+        <CardFooter>
           <BackButton href={backButtonHref} label={backButtonLabel}></BackButton>
         </CardFooter>
       </Card>

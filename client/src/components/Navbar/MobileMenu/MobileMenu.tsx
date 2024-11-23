@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { MobileNavbar } from './MobileNavbar';
-import clsx from 'clsx'; // If clsx is not installed, install it with `npm install clsx`
+import clsx from 'clsx';
 
 export const MobileMenu = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
