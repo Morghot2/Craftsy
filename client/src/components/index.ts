@@ -4,3 +4,6 @@ export * from './ui/button';
 export * from './ui/dialog';
 export * from './Auth/Login';
 export * from './Auth/Register';
+export * from './Profile/Profile';
+export * from './Layout/Layout';
+export * from './Categories';
