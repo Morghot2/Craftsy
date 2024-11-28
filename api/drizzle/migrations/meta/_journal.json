@@ -15,6 +15,41 @@
       "when": 1725473345432,
       "tag": "0001_easy_dakota_north",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1732446962456,
+      "tag": "0002_nasty_zzzax",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1732447440792,
+      "tag": "0003_absurd_spencer_smythe",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1732447910280,
+      "tag": "0004_melted_miracleman",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1732472071253,
+      "tag": "0005_normal_shotgun",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1732489477552,
+      "tag": "0006_hesitant_ravenous",
+      "breakpoints": true
     }
   ]
 }

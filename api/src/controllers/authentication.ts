@@ -59,3 +59,14 @@ export const logout = (req: Request, res: Response) => {
     return res.sendStatus(400);
   }
 };
+
+export const becomeSeller = async (req: Request, res: Response) => {
+  try {
+    const user = res.locals.user;
+    const updatedUser = await updateUserById(user.id, { ...user, is_seller: true });
+    return res.status(200).json(updatedUser);
+  } catch (error) {
+    console.error(error);
+    return res.sendStatus(400);
+  }
+};

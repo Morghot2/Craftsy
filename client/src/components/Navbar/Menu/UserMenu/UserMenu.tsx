@@ -2,10 +2,11 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useLogoutUser } from '@/shared/queries/useAuth';
 import shoppingCart from '@/assets/shoppingCart.png';
+import { PersonIcon } from '@radix-ui/react-icons';
+import { RootState } from '@/app/store';
 
 export const UserMenu = () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { isAuthenticated } = useSelector((state: any) => state.user);
+  const { isAuthenticated } = useSelector((state: RootState) => state.user);
   const logoutMutation = useLogoutUser();
 
   const handleLogout = () => {
@@ -14,7 +15,18 @@ export const UserMenu = () => {
 
   return (
     <div className="flex justify-between items-center ml-[120px]">
-      {isAuthenticated && <img src={shoppingCart} alt="Shopping Cart" className="cursor-pointer" />}
+      {isAuthenticated && (
+        <Link to="/cart">
+          <img src={shoppingCart} alt="Shopping Cart" className="cursor-pointer w-6 h-6 mr-4" />
+        </Link>
+      )}
+
+      {isAuthenticated && (
+        <Link to="/profile">
+          <PersonIcon className="cursor-pointer w-6 h-6 text-[#224f34] mr-4" />
+        </Link>
+      )}
+
       {isAuthenticated ? (
         <button
           onClick={handleLogout}
