@@ -7,7 +7,6 @@ export const BecomeSeller = ({ isOpen, onClose, defaultValues }: BecomeSellerPro
   });
 
   const onSubmit = (data) => {
-    console.log('Updated Data:', data);
     onClose();
   };
 

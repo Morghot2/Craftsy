@@ -1,5 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { queryClient } from '../../main';
 import { loginUser, logoutUser } from '@/app/slices/userSlice';
 import { post } from '../../services/apiClient';
 
@@ -44,12 +46,15 @@ const logoutUserApi = async () => post('/auth/logout');
 
 export const useLogoutUser = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   return useMutation({
     mutationFn: logoutUserApi,
     mutationKey: ['logoutUser'],
     onSuccess: () => {
       dispatch(logoutUser());
+      queryClient.clear();
+      navigate('/');
     },
   });
 };

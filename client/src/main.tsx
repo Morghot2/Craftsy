@@ -9,7 +9,7 @@ import { Home, Register, Login, Profile, Layout, CategoryPage } from './componen
 
 import './index.css';
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {

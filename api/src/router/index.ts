@@ -5,6 +5,9 @@ import { isAuthenticated } from '@/middleware';
 import { getAllCategories } from '@/controllers/categories';
 import { getAllServices, addService, getServicesForCategory, getSellerServices } from '@/controllers/services';
 import { becomeSeller } from '@/controllers/authentication';
+import upload from '../middleware/index';
+import { uploadPhoto } from '../controllers/users';
+import { getUserProfile } from '@/controllers/users';
 
 const router = Router();
 
@@ -12,8 +15,9 @@ router.post('/auth/register', register);
 router.post('/auth/login', login);
 router.post('/auth/logout', logout);
 router.post('/auth/become-seller', isAuthenticated, becomeSeller);
-
+router.get('/users/profile', isAuthenticated, getUserProfile);
 router.get('/users', isAuthenticated, getAllUsers);
+router.post('/photos/upload', upload.single('photo'), uploadPhoto);
 
 router.get('/categories', getAllCategories);
 

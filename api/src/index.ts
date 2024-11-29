@@ -23,9 +23,7 @@ const server = http.createServer(app);
 
 const startServer = async () => {
   try {
-    console.log('Seeding categories...');
     await seedCategories();
-    console.log('Categories seeded successfully.');
 
     server.listen(port, () => {
       console.log(`Server running on port ${port}`);

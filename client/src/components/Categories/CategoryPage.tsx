@@ -1,7 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { services } from './Categories.utils';
 
-// Dummy data for categories and services
 const categories = [
   { id: 1, name: 'Forgery', description: 'Art of forging metals' },
   { id: 2, name: 'Blacksmithing', description: 'Crafting metal tools and objects' },
@@ -13,20 +12,14 @@ const categories = [
   { id: 8, name: 'Glassblowing', description: 'Creating glass art and items' },
 ];
 
-// Dummy services data
-
-// Component
 export const CategoryPage = () => {
-  const { name } = useParams<{ name: string }>(); // Get category name from URL params
+  const { name } = useParams<{ name: string }>();
 
-  // Find the category matching the name
   const category = categories.find((cat) => cat.name.toLowerCase() === name?.toLowerCase());
-  // Filter services by category name
   const filteredServices = services.filter((service) => service.category_name.toLowerCase() === name?.toLowerCase());
 
   return (
     <div className="py-10">
-      {/* Category Section */}
       {category ? (
         <div className="bg-white shadow-md rounded-lg p-6 mb-10">
           <h1 className="font-['Rufina'] text-[32px] xl:text-[40px] text-[#224f34] font-bold mb-4">{category.name}</h1>
@@ -35,8 +28,6 @@ export const CategoryPage = () => {
       ) : (
         <p className="text-red-500 text-lg">Category not found. Please check the category URL.</p>
       )}
-
-      {/* Services Section */}
       <div>
         <h2 className="font-['Rufina'] text-[28px] xl:text-[36px] text-[#224f34] font-bold mb-6">Services in {category?.name}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
