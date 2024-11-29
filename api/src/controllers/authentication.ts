@@ -31,19 +31,28 @@ export const login = async (req: Request, res: Response) => {
     if (!email || !password) {
       return res.sendStatus(400);
     }
+
     const result = await getUserByEmail(email);
     if (!result || result.length === 0) {
       return res.sendStatus(400);
     }
+
     const user = result[0];
     const expectedSecret = authentication(user.salt, password);
     if (user.password !== expectedSecret) {
       return res.sendStatus(403);
     }
+
     user.sessiontoken = authentication(random(), user.email);
-    const updatedUser = await updateUserById(user.id, user);
-    res.cookie(SESSION_TOKEN, user.sessiontoken, { domain: DOMAIN, path: '/', expires: new Date(Date.now() + 900000) });
-    return res.status(200).json(updatedUser);
+    const updatedUser = await updateUserById(user.id, { sessiontoken: user.sessiontoken });
+
+    res.cookie(SESSION_TOKEN, user.sessiontoken, {
+      domain: DOMAIN,
+      path: '/',
+      expires: new Date(Date.now() + 900000),
+    });
+
+    return res.status(200).json(updatedUser[0]);
   } catch (error) {
     console.error(error);
     res.sendStatus(400);

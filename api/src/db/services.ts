@@ -36,3 +36,16 @@ export const createService = async (newService: NewService) => {
 export const getServicesBySeller = async (sellerId: number) => {
   return await db.select().from(services).where(eq(services.seller_id, sellerId));
 };
+
+export const getServicesByUserId = async (userId: number) => {
+  return await db
+    .select({
+      id: services.id,
+      name: services.name,
+      description: services.description,
+      price: services.price,
+      categoryId: services.category_id,
+    })
+    .from(services)
+    .where(eq(services.seller_id, userId));
+};

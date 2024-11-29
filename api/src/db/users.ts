@@ -15,9 +15,11 @@ export const users = pgTable('users', {
   sessiontoken: text('sessiontoken'),
   is_seller: boolean('is_seller').default(false),
   bio: text('bio'),
+  profilePhoto: text('profile_photo'),
 });
 
 export type User = InferSelectModel<typeof users>;
+
 export type NewUser = InferInsertModel<typeof users>;
 
 const pool = new Pool({
@@ -31,8 +33,9 @@ export const getUserByEmail = async (email: string) => await db.select().from(us
 export const getUserBySessionToken = async (sessionToken: string) => await db.select().from(users).where(eq(users.sessiontoken, sessionToken));
 export const createUser = async (newUser: NewUser) =>
   await db.insert(users).values(newUser).returning({ id: users.id, username: users.username, email: users.email });
-export const updateUserById = async (id: number, updatedUser: User) =>
-  await db.update(users).set(updatedUser).where(eq(users.id, id)).returning({ id: users.id, username: users.username, email: users.email });
+export const updateUserById = async (userId: number, data: Partial<User>) => {
+  return db.update(users).set(data).where(eq(users.id, userId)).returning();
+};
 export const becomeSeller = async (id: number, bio: string) => {
   return await db
     .update(users)

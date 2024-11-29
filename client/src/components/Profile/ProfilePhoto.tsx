@@ -1,16 +1,44 @@
 import { ProfilePhotoProps } from './Profile.utils';
-export const ProfilePhoto = ({ isOpen, onClose, onPhotoUpload }: ProfilePhotoProps) => {
-  if (!isOpen) return null;
+import { useUploadPhoto } from '@/shared/queries/useUploadPhoto';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/app/store';
 
-  const handlePhotoUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => onPhotoUpload(reader.result);
-      reader.readAsDataURL(file);
+export const ProfilePhoto = ({ isOpen, onClose, onPhotoUpload }: ProfilePhotoProps) => {
+  const { mutate: uploadPhoto } = useUploadPhoto();
+
+  const userId = useSelector((state: RootState) => state.user.id);
+
+  const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      console.error('No file selected!');
+      return;
     }
-    onClose();
+
+    if (!userId) {
+      console.error('User ID is missing! Ensure user is logged in and ID is available in state.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('photo', file);
+    formData.append('userId', String(userId));
+
+    console.log('FormData before upload:', Array.from(formData.entries()));
+
+    uploadPhoto(formData, {
+      onSuccess: (data) => {
+        console.log('Photo uploaded successfully:', data);
+        onPhotoUpload(data.photoUrl);
+        onClose();
+      },
+      onError: (error) => {
+        console.error('Photo upload failed:', error);
+      },
+    });
   };
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -18,10 +46,10 @@ export const ProfilePhoto = ({ isOpen, onClose, onPhotoUpload }: ProfilePhotoPro
         <h2 className="font-bold text-2xl text-[#224f34] mb-4">Upload Photo</h2>
         <div
           className="flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg h-40 cursor-pointer"
-          onClick={() => document.getElementById('photo-upload').click()}
+          onClick={() => document.getElementById('photo-upload')?.click()}
         >
           <input id="photo-upload" type="file" className="hidden" accept="image/*" onChange={handlePhotoUpload} />
-          <p className="text-gray-500">Click to Upload</p>
+          <p className="text-gray-500">Uploading...</p> : <p className="text-gray-500">Click to Upload</p>
         </div>
         <button onClick={onClose} className="mt-4 py-2 px-4 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400">
           Cancel

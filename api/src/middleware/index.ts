@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { SESSION_TOKEN } from '@/constants';
 import { getUserBySessionToken } from '@/db/users';
+import multer from 'multer';
 
 export const isAuthenticated = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -31,3 +32,8 @@ export const isSeller = (req: Request, res: Response, next: NextFunction) => {
   }
   next();
 };
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
+export default upload;

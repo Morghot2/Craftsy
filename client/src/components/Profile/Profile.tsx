@@ -1,36 +1,31 @@
 import { PersonIcon } from '@radix-ui/react-icons';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BecomeSeller } from './BecomeSeller';
 import { ProfilePhoto } from './ProfilePhoto';
-
-const user = {
-  email: 'user@example.com',
-  password: '******',
-  is_seller: true,
-  bio: 'I am a passionate artisan who loves creating unique handmade items.',
-  country: 'USA',
-  photo: '',
-  name: '123illuvatar',
-  services: [
-    {
-      id: 1,
-      title: 'Custom Handmade Jewelry',
-      thumbnail: 'https://via.placeholder.com/300x150',
-      description: 'Beautifully crafted jewelry made to order.',
-    },
-    {
-      id: 2,
-      title: 'Personalized Wooden Crafts',
-      thumbnail: 'https://via.placeholder.com/300x150',
-      description: 'Unique wooden items with custom engraving.',
-    },
-  ],
-};
+import { useUserProfile } from '@/shared/queries/useUserProfile';
 
 export const Profile = () => {
   const [isSellerModalOpen, setIsSellerModalOpen] = useState(false);
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
-  const [uploadedPhoto, setUploadedPhoto] = useState(user.photo);
+
+  const { data: user, isLoading, error } = useUserProfile();
+  const [uploadedPhoto, setUploadedPhoto] = useState('');
+
+  // Update `uploadedPhoto` when the query finishes loading and data is available
+  useEffect(() => {
+    if (user && user.profilePhoto) {
+      setUploadedPhoto(user.profilePhoto);
+    }
+  }, [user]);
+
+  // Show a loading indicator while the query is in progress
+  if (isLoading) {
+    return <p>Loading profile...</p>;
+  }
+
+  if (error) {
+    return <p>Error loading profile. Please try again later.</p>;
+  }
 
   return (
     <div className="flex flex-col w-100 min-h-screen px-6 py-10">
@@ -46,8 +41,8 @@ export const Profile = () => {
           )}
         </div>
         <div>
-          <h1 className="font-bold text-2xl text-[#224f34]">{user.name}</h1>
-          <p className="text-gray-600">@{user.name.toLowerCase()}</p>
+          <h1 className="font-bold text-2xl text-[#224f34]">{user.username}</h1>
+          <p className="text-gray-600">@{user.username.toLowerCase()}</p>
           <p className="text-gray-600 mt-2">Email: {user.email}</p>
           <button onClick={() => setIsSellerModalOpen(true)} className="mt-4 py-2 px-4 bg-[#224f34] text-white rounded-lg hover:bg-[#1a3d28]">
             Edit Profile
@@ -78,7 +73,13 @@ export const Profile = () => {
           country: user.country,
         }}
       />
-      <ProfilePhoto isOpen={isPhotoModalOpen} onClose={() => setIsPhotoModalOpen(false)} onPhotoUpload={setUploadedPhoto} />
+      <ProfilePhoto
+        isOpen={isPhotoModalOpen}
+        onClose={() => setIsPhotoModalOpen(false)}
+        onPhotoUpload={(photoUrl) => {
+          setUploadedPhoto(photoUrl);
+        }}
+      />
     </div>
   );
 };
