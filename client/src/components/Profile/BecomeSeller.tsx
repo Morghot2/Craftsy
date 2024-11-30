@@ -1,10 +1,14 @@
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { becomeSellerSchema } from '@/shared/schemas/auth';
 import { useBecomeSeller } from '@/shared/queries/useBecomeSeller';
+import { useQueryClient } from '@tanstack/react-query';
 
-export const BecomeSeller = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+export const BecomeSeller = ({ isOpen, onClose, defaultValues = {} }) => {
+  const queryClient = useQueryClient(); // Access react-query cache
   const { mutate, isLoading } = useBecomeSeller();
+
   const form = useForm({
     resolver: zodResolver(becomeSellerSchema),
     defaultValues: {
@@ -13,12 +17,18 @@ export const BecomeSeller = ({ isOpen, onClose }: { isOpen: boolean; onClose: ()
       phone: '',
       name: '',
       surname: '',
+      ...defaultValues, // Prepopulate form with existing data
     },
   });
 
-  const onSubmit = (data: z.infer<typeof becomeSellerSchema>) => {
+  useEffect(() => {
+    form.reset(defaultValues); // Reset form when modal opens with new data
+  }, [defaultValues, form]);
+
+  const onSubmit = (data) => {
     mutate(data, {
       onSuccess: () => {
+        queryClient.invalidateQueries(['userProfile']); // Invalidate query to refetch user data
         onClose();
       },
       onError: (error) => {
@@ -32,7 +42,7 @@ export const BecomeSeller = ({ isOpen, onClose }: { isOpen: boolean; onClose: ()
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-md p-6 w-full max-w-lg">
-        <h2 className="font-bold text-2xl text-[#224f34] mb-4">Become a Seller</h2>
+        <h2 className="font-bold text-2xl text-[#224f34] mb-4">{defaultValues.name ? 'Edit Profile' : 'Become a Seller'}</h2>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
           <div>
             <label className="block font-semibold">Name:</label>

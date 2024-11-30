@@ -1,5 +1,5 @@
 import { PersonIcon } from '@radix-ui/react-icons';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BecomeSeller } from './BecomeSeller';
 import { ProfilePhoto } from './ProfilePhoto';
 import { useUserProfile } from '@/shared/queries/useUserProfile';
@@ -11,7 +11,6 @@ export const Profile = () => {
   const { data: user, isLoading, error } = useUserProfile();
   const queryClient = useQueryClient();
 
-  // Handle loading and error states
   if (isLoading) {
     return <p className="font-['Rufina'] text-center text-lg">Loading...</p>;
   }
@@ -23,10 +22,8 @@ export const Profile = () => {
   return (
     <div className="flex flex-col w-full min-h-screen px-6 py-10 font-['Rufina']">
       <div className="bg-white rounded-lg shadow-md p-6 flex flex-col md:flex-row gap-8">
-        {/* Left: Regular User Info */}
-        <div className="flex-1 border-r border-gray-300 pr-4">
+        <div className="flex-1 md:border-r md:border-gray-300 md:pr-4">
           <div className="flex flex-col items-center text-gray-700 space-y-4">
-            {/* Centered Profile Photo */}
             <div
               className="w-32 h-32 rounded-full border-4 border-gray-300 mb-4 flex items-center justify-center cursor-pointer overflow-hidden bg-gray-100"
               onClick={() => setIsPhotoModalOpen(true)}
@@ -37,7 +34,6 @@ export const Profile = () => {
                 <PersonIcon className="text-gray-500 w-16 h-16" />
               )}
             </div>
-            {/* User Info */}
             <div className="border border-gray-300 p-4 rounded-lg shadow-sm w-full">
               <strong className="block text-sm text-gray-500 uppercase">Username</strong>
               <p className="text-lg text-center">{user.username}</p>
@@ -47,12 +43,11 @@ export const Profile = () => {
               <p className="text-lg text-center">{user.email}</p>
             </div>
             <button onClick={() => setIsSellerModalOpen(true)} className="mt-4 py-2 px-4 bg-[#224f34] text-white rounded-lg hover:bg-[#1a3d28] block">
-              Edit Profile
+              {user.isSeller ? 'Edit Profile' : 'Become a Seller!'}
             </button>
           </div>
         </div>
 
-        {/* Right: Seller Info */}
         {user.isSeller && (
           <div className="flex-1">
             <h2 className="font-bold text-xl text-[#224f34] mb-4 border-b border-gray-300 pb-2">Seller Information</h2>
@@ -65,7 +60,7 @@ export const Profile = () => {
               </div>
               <div className="border border-gray-300 p-4 rounded-lg shadow-sm">
                 <strong className="block text-sm text-gray-500 uppercase">Bio</strong>
-                <p className="text-lg">{user.bio}</p>
+                <p className="text-lg break-words">{user.bio}</p>
               </div>
               <div className="border border-gray-300 p-4 rounded-lg shadow-sm">
                 <strong className="block text-sm text-gray-500 uppercase">Country</strong>
@@ -107,13 +102,18 @@ export const Profile = () => {
           surname: user.surname,
           phone: user.phone,
         }}
+        onSave={(updatedData) => {
+          queryClient.setQueryData(['userProfile'], (oldData) => ({
+            ...oldData,
+            ...updatedData,
+          }));
+        }}
       />
 
       <ProfilePhoto
         isOpen={isPhotoModalOpen}
         onClose={() => setIsPhotoModalOpen(false)}
         onPhotoUpload={(photoUrl) => {
-          // Update the cache directly after photo upload
           queryClient.setQueryData(['userProfile'], (oldData) => ({
             ...oldData,
             profilePhoto: photoUrl,
