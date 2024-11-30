@@ -10,6 +10,7 @@ export const services = pgTable('services', {
   name: text('name').notNull(),
   description: text('description').notNull(),
   price: integer('price').notNull(),
+  photo_url: text('photo_url').notNull(),
   category_id: integer('category_id')
     .notNull()
     .references(() => categories.id),
@@ -21,20 +22,15 @@ export const services = pgTable('services', {
 export type Service = InferSelectModel<typeof services>;
 export type NewService = InferInsertModel<typeof services>;
 
-export const getServices = async () => {
-  return await db.select().from(services);
-};
-
-export const getServicesByCategory = async (categoryId: number) => {
-  return await db.select().from(services).where(eq(services.category_id, categoryId));
-};
-
-export const createService = async (newService: NewService) => {
-  return await db.insert(services).values(newService).returning();
-};
-
-export const getServicesBySeller = async (sellerId: number) => {
-  return await db.select().from(services).where(eq(services.seller_id, sellerId));
+export const getServices = async (filter?: { userId?: number; categoryId?: number }) => {
+  const query = db.select().from(services);
+  if (filter?.userId) {
+    query.where(eq(services.seller_id, filter.userId));
+  }
+  if (filter?.categoryId) {
+    query.where(eq(services.category_id, filter.categoryId));
+  }
+  return await query;
 };
 
 export const getServicesByUserId = async (userId: number) => {
@@ -45,7 +41,12 @@ export const getServicesByUserId = async (userId: number) => {
       description: services.description,
       price: services.price,
       categoryId: services.category_id,
+      photo_url: services.photo_url,
     })
     .from(services)
     .where(eq(services.seller_id, userId));
+};
+
+export const createService = async (newService: NewService) => {
+  return await db.insert(services).values(newService).returning();
 };
