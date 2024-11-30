@@ -57,6 +57,20 @@
       "when": 1732910057481,
       "tag": "0007_handy_mandrill",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1732925212452,
+      "tag": "0008_flashy_centennial",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1732926125514,
+      "tag": "0009_left_jocasta",
+      "breakpoints": true
     }
   ]
 }

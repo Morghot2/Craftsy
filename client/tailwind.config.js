@@ -7,6 +7,9 @@ export default {
   ],
   theme: {
   	extend: {
+		fontFamily: {
+			sans: ['Rufina', 'sans-serif'], 
+		  },
 		backgroundImage: {
 			'mainimg': "url('./src/assets/craftsy.png')",
 		  },
