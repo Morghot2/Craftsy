@@ -1,13 +1,15 @@
 import { PersonIcon } from '@radix-ui/react-icons';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { BecomeSeller } from './BecomeSeller';
 import { ProfilePhoto } from './ProfilePhoto';
+import { AddServiceModal } from './AddService';
 import { useUserProfile } from '@/shared/queries/useUserProfile';
 import { useQueryClient } from '@tanstack/react-query';
 
 export const Profile = () => {
   const [isSellerModalOpen, setIsSellerModalOpen] = useState(false);
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
+  const [isAddServiceModalOpen, setIsAddServiceModalOpen] = useState(false);
   const { data: user, isLoading, error } = useUserProfile();
   const queryClient = useQueryClient();
 
@@ -15,7 +17,7 @@ export const Profile = () => {
     return <p className="font-['Rufina'] text-center text-lg">Loading...</p>;
   }
 
-  if (error) {
+  if (error || !user) {
     return <p className="font-['Rufina'] text-center text-lg text-red-500">Error loading profile. Please try again later.</p>;
   }
 
@@ -77,20 +79,38 @@ export const Profile = () => {
 
       <div className="border-t w-full border-gray-300 my-8"></div>
 
-      <div className="w-full p-6">
-        <h2 className="font-bold text-xl text-[#224f34] mb-4">Services</h2>
-        <div className="flex flex-wrap gap-6">
-          {user.services.map((service) => (
-            <div key={service.id} className="flex flex-col border border-gray-300 rounded-lg w-[300px] shadow-md">
-              <img src={service.thumbnail} alt={service.title} className="w-full h-36 object-cover" />
-              <div className="p-4 bg-white">
-                <h3 className="font-bold text-lg text-[#224f34]">{service.title}</h3>
-                <p className="text-gray-600 mt-2">{service.description}</p>
-              </div>
-            </div>
-          ))}
+      {user.isSeller && (
+        <div className="w-full p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="font-bold text-xl text-[#224f34]">Services</h2>
+            <button onClick={() => setIsAddServiceModalOpen(true)} className="py-2 px-4 bg-[#224f34] text-white rounded-lg hover:bg-[#1a3d28]">
+              Add a Service
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-6">
+            {user.services && user.services.length > 0 ? (
+              user.services.map((service) => (
+                <div
+                  key={service.id}
+                  className="flex flex-col border border-gray-300 rounded-lg w-[300px] shadow-md overflow-hidden"
+                  style={{ height: '400px' }}
+                >
+                  <div className="w-full h-[200px] overflow-hidden bg-gray-100">
+                    <img src={service.thumbnail || service.photo_url} alt={service.name} className="w-full h-full object-cover" />
+                  </div>
+                  <div className="p-4 bg-white flex flex-col items-center justify-between h-[calc(400px-200px)]">
+                    <h3 className="font-bold text-lg text-[#224f34]">{service.name}</h3>
+                    <p className="text-gray-600 mt-2 text-center flex-grow">{service.description}</p>
+                    <p className="text-[#224f34] font-semibold text-md mt-4 text-center">${service.price}</p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-600">You have no services listed. Add one to get started!</p>
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       <BecomeSeller
         isOpen={isSellerModalOpen}
@@ -107,6 +127,14 @@ export const Profile = () => {
             ...oldData,
             ...updatedData,
           }));
+        }}
+      />
+
+      <AddServiceModal
+        isOpen={isAddServiceModalOpen}
+        onClose={() => {
+          setIsAddServiceModalOpen(false);
+          queryClient.invalidateQueries(['userProfile']);
         }}
       />
 

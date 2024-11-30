@@ -3,7 +3,6 @@ import { get } from '@/services/apiClient/index';
 
 const fetchUserProfile = async () => {
   const response = await get('/users/profile');
-  console.log(response);
   return response;
 };
 

@@ -46,7 +46,7 @@ export const ProfilePhoto = ({ isOpen, onClose, onPhotoUpload }: ProfilePhotoPro
           onClick={() => document.getElementById('photo-upload')?.click()}
         >
           <input id="photo-upload" type="file" className="hidden" accept="image/*" onChange={handlePhotoUpload} />
-          <p className="text-gray-500">Uploading...</p> : <p className="text-gray-500">Click to Upload</p>
+          <p className="text-gray-500"></p> <p className="text-gray-500">Click to Upload</p>
         </div>
         <button onClick={onClose} className="mt-4 py-2 px-4 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400">
           Cancel

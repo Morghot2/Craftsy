@@ -71,6 +71,13 @@
       "when": 1732926125514,
       "tag": "0009_left_jocasta",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1733003908189,
+      "tag": "0010_bouncy_harrier",
+      "breakpoints": true
     }
   ]
 }
