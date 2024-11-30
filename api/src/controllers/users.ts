@@ -3,8 +3,9 @@ import { Request, Response } from 'express';
 import { getUsers } from '../db/users';
 import { uuid as uuidv4 } from 'uuidv4';
 import s3 from '../../s3';
-import { updateUserById, getUserBySessionToken } from '@/db/users';
+import { updateUserById } from '@/db/users';
 import { getServicesByUserId } from '@/db/services';
+import { becomeSeller } from '../db/users';
 
 declare global {
   namespace Express {
@@ -32,7 +33,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
 export const uploadPhoto = async (req: Request, res: Response): Promise<Response> => {
   try {
     const file = req.file;
-    const userId = parseInt(req.body.userId, 10); // Make sure userId is correctly parsed
+    const userId = parseInt(req.body.userId, 10);
 
     if (!file || isNaN(userId)) {
       console.error('Missing file or invalid userId');
@@ -49,7 +50,6 @@ export const uploadPhoto = async (req: Request, res: Response): Promise<Response
 
     const uploadResult = await s3.upload(params).promise();
 
-    // Call updateUserById to save profilePhoto to the database
     const updateResult = await updateUserById(userId, { profilePhoto: uploadResult.Location });
 
     if (updateResult.length === 0) {
@@ -69,13 +69,12 @@ export const uploadPhoto = async (req: Request, res: Response): Promise<Response
 
 export const getUserProfile = async (req: Request, res: Response) => {
   try {
-    const user = res.locals.user; // Authenticated user from middleware
+    const user = res.locals.user;
 
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // Fetch services created by the user
     const services = await getServicesByUserId(user.id);
 
     return res.status(200).json({
@@ -85,11 +84,41 @@ export const getUserProfile = async (req: Request, res: Response) => {
       profilePhoto: user.profilePhoto,
       bio: user.bio,
       country: user.country,
+      phone: user.phone,
+      name: user.name,
+      surname: user.surname,
       isSeller: user.is_seller,
       services,
     });
   } catch (error) {
     console.error('Error fetching user profile:', error);
     return res.status(500).json({ error: 'Failed to fetch user profile' });
+  }
+};
+
+export const becomeSellerController = async (req: Request, res: Response) => {
+  try {
+    const { bio, country, phone, name, surname } = req.body;
+
+    if (!bio || !country || !phone || !name || !surname) {
+      return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    console.log('Received data for becomeSeller:', { bio, country, phone, name, surname });
+
+    const user = res.locals.user;
+
+    if (!user) {
+      return res.status(403).json({ error: 'Unauthorized' });
+    }
+
+    const updatedUser = await becomeSeller(user.id, { bio, country, phone, name, surname });
+
+    console.log('Updated user:', updatedUser);
+
+    return res.status(200).json(updatedUser);
+  } catch (error) {
+    console.error('Error in becomeSellerController:', error);
+    return res.status(500).json({ error: 'Internal server error' });
   }
 };

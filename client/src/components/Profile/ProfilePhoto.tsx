@@ -23,9 +23,6 @@ export const ProfilePhoto = ({ isOpen, onClose, onPhotoUpload }: ProfilePhotoPro
     const formData = new FormData();
     formData.append('photo', file);
     formData.append('userId', String(userId));
-
-    console.log('FormData before upload:', Array.from(formData.entries()));
-
     uploadPhoto(formData, {
       onSuccess: (data) => {
         console.log('Photo uploaded successfully:', data);

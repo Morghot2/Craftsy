@@ -1,4 +1,8 @@
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   padding: 5vh 10vw;
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -21,6 +25,8 @@
 body {
   height: 100%;
   margin: 0;
+  @apply font-sans;
+
 }
 /*
 h1 {
