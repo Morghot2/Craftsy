@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createService, getServices, getServicesByUserId, getServicesByCategoryName } from '@/db/services';
+import { createService, getServices, getServicesByUserId, getServiceByIdFromDB, deleteServiceById } from '@/db/services';
 import { v4 as uuidv4 } from 'uuid';
 import s3 from '../../s3';
 
@@ -81,5 +81,52 @@ export const addService = async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Error adding service:', error);
     return res.status(500).json({ error: 'Failed to add service' });
+  }
+};
+export const getServiceById = async (req: Request, res: Response) => {
+  try {
+    const { serviceId } = req.params;
+
+    if (!serviceId) {
+      return res.status(400).json({ error: 'Service ID is required' });
+    }
+
+    const service = await getServiceByIdFromDB(Number(serviceId));
+
+    if (!service) {
+      return res.status(404).json({ error: 'Service not found' });
+    }
+
+    return res.status(200).json(service);
+  } catch (error) {
+    console.error('Error fetching service by ID:', error);
+    return res.status(500).json({ error: 'Failed to fetch service' });
+  }
+};
+
+export const deleteService = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const userId = res.locals.user.id;
+
+    const service = await getServiceByIdFromDB(Number(id));
+
+    if (!service) {
+      return res.status(404).json({ error: 'Service not found' });
+    }
+
+    if (service.seller_id !== userId) {
+      return res.status(403).json({ error: 'Unauthorized' });
+    }
+    const isDeleted = await deleteServiceById(Number(id), userId);
+
+    if (isDeleted) {
+      return res.status(200).json({ message: 'Service deleted successfully' });
+    } else {
+      return res.status(500).json({ error: 'Failed to delete service' });
+    }
+  } catch (error) {
+    console.error('Error deleting service:', error);
+    return res.status(500).json({ error: 'Failed to delete service' });
   }
 };

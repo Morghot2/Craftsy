@@ -1,5 +1,5 @@
 import { pgTable, serial, text, integer } from 'drizzle-orm/pg-core';
-import { eq } from 'drizzle-orm/expressions';
+import { eq, and } from 'drizzle-orm/expressions';
 import { InferSelectModel, InferInsertModel } from 'drizzle-orm';
 import { db } from './users';
 import { categories } from './categories';
@@ -62,4 +62,33 @@ export const getServicesByCategoryName = async (categoryName: string) => {
 
 export const createService = async (newService: NewService) => {
   return await db.insert(services).values(newService).returning();
+};
+
+export const getServiceByIdFromDB = async (serviceId: number) => {
+  const service = await db
+    .select({
+      id: services.id,
+      name: services.name,
+      description: services.description,
+      price: services.price,
+      photo_url: services.photo_url,
+      seller_id: users.id,
+      seller_name: users.name,
+      seller_country: users.country,
+    })
+    .from(services)
+    .innerJoin(users, eq(services.seller_id, users.id))
+    .where(eq(services.id, serviceId))
+    .limit(1);
+
+  return service[0] || null;
+};
+
+export const deleteServiceById = async (serviceId: number, userId: number) => {
+  const result = await db
+    .delete(services)
+    .where(and(eq(services.id, serviceId), eq(services.seller_id, userId)))
+    .returning();
+
+  return result.length > 0;
 };

@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { post } from '@/services/apiClient';
-import { get } from '../../services/apiClient';
+import { get, del } from '../../services/apiClient';
 
 export const useAddService = () => {
   return useMutation({
@@ -24,5 +24,24 @@ export const useServicesByCategory = (categoryId: number) => {
     queryKey: ['services', 'category', categoryId],
     queryFn: () => fetchServicesByCategory(categoryId),
     enabled: !!categoryId,
+  });
+};
+
+export const fetchServiceById = async (serviceId: number) => {
+  return await get(`/services/${serviceId}`);
+};
+
+export const useServiceById = (serviceId: number) => {
+  return useQuery({
+    queryKey: ['service', serviceId],
+    queryFn: () => fetchServiceById(serviceId),
+    enabled: !!serviceId,
+  });
+};
+
+export const useDeleteService = () => {
+  return useMutation({
+    mutationFn: (serviceId: number) => del(`/services/${serviceId}`),
+    mutationKey: ['deleteService'],
   });
 };
