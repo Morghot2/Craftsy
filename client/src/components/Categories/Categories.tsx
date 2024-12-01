@@ -12,7 +12,7 @@ export const Categories = () => {
       {categories.map((category: { id: number; name: string }) => (
         <Link
           key={category.id}
-          to={`/category/${category.name.toLowerCase()}`}
+          to={`/category/${category.id}`}
           className="flex-shrink-0 px-4 py-2 bg-white rounded-full shadow-md text-gray-700 font-medium transition-colors duration-200 ease-in-out hover:bg-[#224f34] hover:text-white mt-5"
         >
           {category.name}
