@@ -1,5 +1,3 @@
-// useService.ts
-
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { post } from '@/services/apiClient';
 import { get } from '../../services/apiClient';
@@ -17,14 +15,14 @@ export const useAddService = () => {
   });
 };
 
-export const fetchServicesByCategory = async (categoryName: string) => {
-  return await get(`/services/category/${categoryName}`);
+export const fetchServicesByCategory = async (categoryId: number) => {
+  return await get(`/services/category/${categoryId}`);
 };
 
-export const useServicesByCategory = (categoryName: string) => {
+export const useServicesByCategory = (categoryId: number) => {
   return useQuery({
-    queryKey: ['services', 'category', categoryName],
-    queryFn: () => fetchServicesByCategory(categoryName),
-    enabled: !!categoryName,
+    queryKey: ['services', 'category', categoryId],
+    queryFn: () => fetchServicesByCategory(categoryId),
+    enabled: !!categoryId,
   });
 };

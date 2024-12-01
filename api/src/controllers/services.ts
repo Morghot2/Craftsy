@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createService, getServices, getServicesByUserId } from '@/db/services';
+import { createService, getServices, getServicesByUserId, getServicesByCategoryName } from '@/db/services';
 import { v4 as uuidv4 } from 'uuid';
 import s3 from '../../s3';
 
@@ -28,6 +28,27 @@ export const getServicesByUser = async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Error fetching user services:', error);
     return res.status(500).json({ error: 'Failed to fetch user services' });
+  }
+};
+
+export const getServicesForCategory = async (req: Request, res: Response) => {
+  try {
+    const { categoryId } = req.params;
+
+    if (!categoryId) {
+      return res.status(400).json({ error: 'Category ID is required' });
+    }
+
+    const services = await getServices({ categoryId: Number(categoryId) });
+
+    if (!services || services.length === 0) {
+      return res.status(404).json({ error: 'No services found for this category' });
+    }
+
+    return res.status(200).json(services);
+  } catch (error) {
+    console.error('Error fetching services by category:', error);
+    return res.status(500).json({ error: 'Failed to fetch services by category' });
   }
 };
 

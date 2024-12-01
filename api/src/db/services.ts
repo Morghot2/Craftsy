@@ -32,7 +32,6 @@ export const getServices = async (filter?: { userId?: number; categoryId?: numbe
   }
   return await query;
 };
-
 export const getServicesByUserId = async (userId: number) => {
   return await db
     .select({
@@ -45,6 +44,20 @@ export const getServicesByUserId = async (userId: number) => {
     })
     .from(services)
     .where(eq(services.seller_id, userId));
+};
+
+export const getServicesByCategoryName = async (categoryName: string) => {
+  return await db
+    .select({
+      id: services.id,
+      name: services.name,
+      description: services.description,
+      price: services.price,
+      photo_url: services.photo_url,
+    })
+    .from(services)
+    .innerJoin(categories, eq(services.category_id, categories.id))
+    .where(eq(categories.name, categoryName));
 };
 
 export const createService = async (newService: NewService) => {
