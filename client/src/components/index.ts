@@ -8,3 +8,4 @@ export * from './Profile/Profile';
 export * from './Layout/Layout';
 export * from './Categories';
 export * from './Services/Service';
+export * from './Profile/MyPurchases';

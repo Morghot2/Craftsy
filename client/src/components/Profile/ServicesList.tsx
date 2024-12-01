@@ -23,7 +23,7 @@ export const ServicesList = ({ services, onAddService }) => {
           Add a Service
         </button>
       </div>
-      <div className="flex flex-wrap gap-6 justify-between">
+      <div className="flex flex-wrap gap-6 justify-start">
         {services.length > 0 ? (
           services.map((service) => (
             <div

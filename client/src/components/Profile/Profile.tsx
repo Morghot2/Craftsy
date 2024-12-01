@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { UserInfo } from './UserInfo';
 import { SellerInfo } from './SellerInfo';
 import { ServicesList } from './ServicesList';
@@ -30,7 +31,18 @@ export const Profile = () => {
         {user.isSeller && <SellerInfo user={user} />}
       </div>
       <div className="border-t w-full border-gray-300 my-8"></div>
+
+      {/* View My Purchases Button */}
+      <div className="w-full text-center mb-6">
+        <Link to="/purchases" className="py-3 px-6 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200">
+          View My Purchases
+        </Link>
+      </div>
+
+      {/* Services Section */}
       {user.isSeller && <ServicesList services={user.services} onAddService={() => setIsAddServiceModalOpen(true)} />}
+
+      {/* Modals */}
       <BecomeSeller
         isOpen={isSellerModalOpen}
         onClose={() => setIsSellerModalOpen(false)}
