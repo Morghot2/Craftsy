@@ -64,8 +64,6 @@ export const becomeSeller = async (id: number, data: { bio: string; country: str
     is_seller: true,
   };
 
-  console.log('Prepared update data:', updateData);
-
   return await db.update(users).set(updateData).where(eq(users.id, id)).returning({
     id: users.id,
     username: users.username,
