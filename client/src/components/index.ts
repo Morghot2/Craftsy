@@ -7,3 +7,4 @@ export * from './Auth/Register';
 export * from './Profile/Profile';
 export * from './Layout/Layout';
 export * from './Categories';
+export * from './Services/Service';

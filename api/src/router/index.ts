@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { register, login, logout } from '@/controllers/authentication';
-import { getAllServices, addService, getServicesByUser, getServicesForCategory } from '@/controllers/services';
+import { getAllServices, addService, getServicesByUser, getServicesForCategory, getServiceById, deleteService } from '@/controllers/services';
 import { getAllCategories } from '@/controllers/categories';
 import { getUserProfile, becomeSellerController, uploadPhoto } from '@/controllers/users';
 import { isAuthenticated, isSeller } from '@/middleware';
@@ -22,5 +22,7 @@ router.get('/services', getAllServices);
 router.get('/services/user/:userId', isAuthenticated, getServicesByUser);
 router.post('/services', isAuthenticated, isSeller, upload.single('photo'), addService);
 router.get('/services/category/:categoryId', getServicesForCategory);
+router.get('/services/:serviceId', getServiceById);
+router.delete('/services/:id', isAuthenticated, deleteService);
 
 export default router;

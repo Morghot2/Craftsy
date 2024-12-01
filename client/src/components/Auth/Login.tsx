@@ -1,6 +1,6 @@
 import * as z from 'zod';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AuthWrapper } from './Shared/AuthWrapper';
 import { loginSchema } from '@/shared/schemas/auth';
@@ -10,6 +10,9 @@ import { useLoginUser } from '@/shared/queries/useAuth';
 export const Login = () => {
   const { mutate, isSuccess } = useLoginUser();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const redirectTo = new URLSearchParams(location.search).get('redirect') || '/';
 
   const form = useForm({
     resolver: zodResolver(loginSchema),
@@ -20,12 +23,12 @@ export const Login = () => {
   });
 
   const onSubmit = async (data: z.infer<typeof loginSchema>) => {
-    mutate(data);
+    mutate(data, {
+      onSuccess: () => {
+        navigate(redirectTo);
+      },
+    });
   };
-
-  if (isSuccess) {
-    navigate('/');
-  }
 
   return (
     <AuthWrapper label="Welcome back" title="Login" backButtonHref="/register" backButtonLabel="Don't have an account? Register!">
