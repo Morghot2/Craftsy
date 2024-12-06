@@ -1,10 +1,6 @@
-import { drizzle } from 'drizzle-orm/node-postgres';
 import { InferSelectModel, InferInsertModel, eq } from 'drizzle-orm';
 import { pgTable, serial, text, boolean } from 'drizzle-orm/pg-core';
-import { Pool } from 'pg';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { db } from './connection';
 
 export const users = pgTable('users', {
   id: serial('id').primaryKey(),
@@ -23,14 +19,7 @@ export const users = pgTable('users', {
 });
 
 export type User = InferSelectModel<typeof users>;
-
 export type NewUser = InferInsertModel<typeof users>;
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
-
-export const db = drizzle(pool);
 
 export const getUsers = async () => await db.select({ id: users.id, username: users.username, email: users.email }).from(users);
 export const getUserByEmail = async (email: string) => await db.select().from(users).where(eq(users.email, email));
