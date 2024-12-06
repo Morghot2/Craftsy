@@ -2,7 +2,7 @@ import { pgTable, serial, integer, timestamp } from 'drizzle-orm/pg-core';
 import { InferSelectModel, InferInsertModel, eq } from 'drizzle-orm';
 import { users } from './users';
 import { services } from './services';
-import { db } from './users';
+import { db } from './connection';
 
 export const purchases = pgTable('purchases', {
   id: serial('id').primaryKey(),

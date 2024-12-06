@@ -1,7 +1,7 @@
 import { pgTable, serial, text, integer } from 'drizzle-orm/pg-core';
 import { eq, and } from 'drizzle-orm/expressions';
 import { InferSelectModel, InferInsertModel } from 'drizzle-orm';
-import { db } from './users';
+import { db } from './connection';
 import { categories } from './categories';
 import { users } from './users';
 

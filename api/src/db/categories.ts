@@ -1,6 +1,6 @@
 import { pgTable, serial, text } from 'drizzle-orm/pg-core';
 import { InferSelectModel, InferInsertModel } from 'drizzle-orm';
-import { db } from './users';
+import { db } from './connection';
 
 export const categories = pgTable('categories', {
   id: serial('id').primaryKey(),
