@@ -1,7 +1,15 @@
 import { useMutation } from '@tanstack/react-query';
 import { post } from '@/services/apiClient';
 
-const becomeSellerApi = async (data: { bio: string; country: string; phone: string; name: string; surname: string }) => {
+interface BecomeSellerData {
+  bio: string;
+  country: string;
+  phone: string;
+  name: string;
+  surname: string;
+}
+
+const becomeSellerApi = async (data: BecomeSellerData) => {
   return post('/users/become-seller', data);
 };
 

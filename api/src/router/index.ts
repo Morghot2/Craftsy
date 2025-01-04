@@ -1,11 +1,23 @@
 import express from 'express';
 import { Router } from 'express';
-import { register, login, logout } from '@/controllers/authentication';
-import { getAllServices, addService, getServicesByUser, getServicesForCategory, getServiceById, deleteService } from '@/controllers/services';
-import { getAllCategories } from '@/controllers/categories';
-import { getUserProfile, becomeSellerController, uploadPhoto } from '@/controllers/users';
-import { createCheckoutSession, handleWebhook } from '../controllers/payment';
-import { getPurchasesForUser } from '@/controllers/purchases';
+import {
+  register,
+  login,
+  logout,
+  getAllServices,
+  addService,
+  getServicesByUser,
+  getServicesForCategory,
+  getServiceById,
+  deleteService,
+  getAllCategories,
+  getUserProfile,
+  becomeSellerController,
+  uploadPhoto,
+  createCheckoutSession,
+  handleWebhook,
+  getPurchasesForUser,
+} from '@/controllers';
 import { isAuthenticated, isSeller } from '@/middleware';
 import upload from '@/middleware';
 
