@@ -14,14 +14,6 @@ export const Login = () => {
 
   const redirectTo = new URLSearchParams(location.search).get('redirect') || '/';
 
-  const form = useForm({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-    },
-  });
-
   const onSubmit = async (data: z.infer<typeof loginSchema>) => {
     mutate(data, {
       onSuccess: () => {
@@ -29,6 +21,14 @@ export const Login = () => {
       },
     });
   };
+
+  const form = useForm({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
 
   return (
     <AuthWrapper label="Welcome back" title="Login" backButtonHref="/register" backButtonLabel="Don't have an account? Register!">
